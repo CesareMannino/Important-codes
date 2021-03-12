@@ -1,0 +1,21 @@
+//Jquery line of code to share same header footer etc taken from http://code.jquery.com/
+
+
+//STEP 1 place the line of code in between the header on the main html page
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+//STEP 2 under the JQuery script insert the following script:
+
+<script>
+       $(function(){
+          $('#navbar').load('navbar.html');
+        });
+      </script>
+
+//STEP 3 the above script load the html page insert as argument and insert the loaded page where the id = navbar is always between the body tag.
+<html>
+        <body>
+<div id = "navbar"></div>
+    </body>
+</html>
