@@ -1,0 +1,19 @@
+{
+  "name": "node",
+  "version": "1.0.0",
+  "description": "This is the data selfie app by Joey Lee.",
+  "main": "node.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "exmples",
+    "data",
+    "selfies"
+  ],
+  "author": "Cesare Mannino",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
