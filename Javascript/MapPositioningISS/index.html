@@ -28,8 +28,8 @@
 <body>
 
     <h1>Where is the ISS</h1>
-    <p>latitude:<span id="lat"></span><br />
-        longitude:<span id="lon"></span></p>
+    <p>latitude:<span id="lat"></span>°<br />
+        longitude:<span id="lon"></span>°</p>
 
     <div id="mapid"></div>
 
@@ -49,7 +49,7 @@
         const tiles = L.tileLayer(tileUrl, { attribution });
         tiles.addTo(mymap);
 
-// Making a marker with a custom Icon
+        // Making a marker with a custom Icon
         const issIcon = L.icon({
             iconUrl: 'International_Space_Station.png',
             iconSize: [50, 32],
@@ -65,20 +65,31 @@
 
 
         const api_url = "https://api.wheretheiss.at/v1/satellites/25544";
+
+        let firstTime = true;
+
         async function getISS() {
             const response = await fetch(api_url);
             const data = await response.json();
             const { latitude, longitude } = data;
 
             //following code to place a marker on the map  sintax of marker L.marker([50.5, 30.5]).addTo(map);
-            // L.marker([latitude, longitude]).addTo(mymap);
-            marker.setLatLng([latitude, longitude]);
 
-            document.getElementById('lat').textContent = latitude;
-            document.getElementById('lon').textContent = longitude;
+            marker.setLatLng([latitude, longitude]);
+            // to set the mapview under the iss
+            if (firstTime) {
+                mymap.setView([latitude, longitude], 3);
+                firstTime = false;
+            }
+
+            document.getElementById('lat').textContent = latitude.toFixed(2);
+            document.getElementById('lon').textContent = longitude.toFixed(2);
         }
         getISS();
 
+
+        // sintax window.setInterval(function, milliseconds);
+        setInterval(getISS, 1000);
 
     </script>
 </body>
