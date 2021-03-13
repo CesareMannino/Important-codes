@@ -5,22 +5,75 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fetch JSON form API</title>
+    <title>Mapping ISS</title>
+
+    <!-- leaflet css link -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin="" />
+
+    <!-- Make sure you put this AFTER Leaflet's CSS  the library can be called using L and 
+    dot notation example L.map()-->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+
+    <style>
+        #mapid {
+            height: 180px;
+        }
+    </style>
 </head>
 
 <body>
 
-<h1>Where is the ISS</h1>
-<p >latitude:<span id = "lat"></span><br/>
-longitude:<span id = "lon"></span></p>
+    <h1>Where is the ISS</h1>
+    <p>latitude:<span id="lat"></span><br />
+        longitude:<span id="lon"></span></p>
+
+    <div id="mapid"></div>
+
 
 
     <script>
+        // variable inserted to choose the geographical coordinates
+        //    L capital letter to call the leaflet library
+        //    setView([Lat,Lng], zoom)
+
+        // Making a map and tiles
+
+        const mymap = L.map('mapid').setView([0, 0], 1);
+        const attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>contributors';
+        // tileUrl taken fom leafletjs docs https://leafletjs.com/reference-1.7.1.html#tilelayer
+        const tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        const tiles = L.tileLayer(tileUrl, { attribution });
+        tiles.addTo(mymap);
+
+// Making a marker with a custom Icon
+        const issIcon = L.icon({
+            iconUrl: 'International_Space_Station.png',
+            iconSize: [50, 32],
+            iconAnchor: [25, 16]
+
+        });
+
+
+
+        const marker = L.marker([0, 0], { icon: issIcon }).addTo(mymap);
+
+
+
+
         const api_url = "https://api.wheretheiss.at/v1/satellites/25544";
         async function getISS() {
             const response = await fetch(api_url);
             const data = await response.json();
-            const { latitude, longitude} = data;
+            const { latitude, longitude } = data;
+
+            //following code to place a marker on the map  sintax of marker L.marker([50.5, 30.5]).addTo(map);
+            // L.marker([latitude, longitude]).addTo(mymap);
+            marker.setLatLng([latitude, longitude]);
+
             document.getElementById('lat').textContent = latitude;
             document.getElementById('lon').textContent = longitude;
         }
