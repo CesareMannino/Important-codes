@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Hello</title>
+</head>
+
+<body>
+
+    <!-- script which test if the client side got geolocation -->
+    <script>
+        if ('geolocation' in navigator) {
+            console.log('geolocation available');
+            // getcurrent position by default gives the position
+            // we make it asyncronous to 
+            navigator.geolocation.getCurrentPosition(async position => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                document.getElementById('latitude').textContent = lat;
+                document.getElementById('longitude').textContent = lon;
+                // console.log(position.coords);
+
+                // the section of code below use the method POST
+                const data = { lat, lon };
+                const options = {
+                    method: 'POST',
+                    // the headers specify the kind of information
+                    // shared between client and server
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    // is a fetch() option that create a string/json package between 
+                    // client and server
+                    body: JSON.stringify(data)
+                };
+                // the response variable is the one that will  
+                // handle the response from the server
+                const response = await fetch('/api', options);
+                const json = await response.json();
+                console.log(json);
+            });
+
+        } else {
+            console.log('geolocation is not available');
+        }
+    </script>
+
+
+    <h1>Data Selfie App</h1>
+    <!--href="/" creates an anchor tag that that will create a link to the own page index.html   -->
+
+    <p>Latitude:<span id="latitude"></span>&deg;<br /></p>
+    <p>Longitude:<span id="longitude"></span>&deg;<br /></p>
+</body>
+
+</html>
