@@ -1,4 +1,7 @@
 const express = require('express');
+// to import the nedb module to the script
+const Datastore = require('nedb');
+
 const app = express();
 // listen method takes two argument, the first one is the number
 // of the port, the second one is a function that instruct the server 
@@ -6,18 +9,35 @@ const app = express();
 app.listen(3000, () => console.log('listening at 3000'));
 //static method sintax express.static(root, [options])
 app.use(express.static('public'));
-app.use(express.json({limit: '1mb'}));
+app.use(express.json({ limit: '1mb' }));
+// we create a new object
+const database = new Datastore('database.db');
+// with the dot notaion we call the nedb library method
+// loadDatabase. ----loadDatabase creates the file database inside the folder----
+database.loadDatabase();
+// to insert item on the database file
+// database.insert({name: "Mannino", status: 'rainbow'});
+// database.insert({name: "Giulio", status: 'star'});
+
 app.post('/api', (request, response) => {
- console.log('I got a request');
- console.log(request.body);
- const data = request.body;
-//  response from the server to the client totally made
-// up by us
-response.json({
-    status: 'success',
-    latitude: data.lat,
-    longitude:data.lon
-});
+    console.log('I got a request');
+    // console.log(request.body);
+    const data = request.body;
+    // we insert the Date.now method to insert a timestamp
+    const timestamp = Date.now();
+    data.timestamp = timestamp;
+
+    database.insert(data);
+  
+    //  response from the server to the client totally made
+    // up by us
+    response.json({
+        status: 'success',
+        timestamp : timestamp,
+        latitude: data.lat,
+        longitude: data.lon,
+        vegetable:data.vegetable
+    });
 });
 
- 
+
